@@ -1,101 +1,230 @@
 #include <stdio.h>
 #include <stdlib.h>
-int *a,*b,*sum,*sub,*mul,*trs1,*trs2,i,j,r,c;
-void input(int *);
-void addition(int *,int *,int *);
-void display(int *);
-void multiply(int *,int *,int *);
-void subtraction(int *,int *,int *);
-void transpose(int *,int *);
+#define null 0
+typedef struct list
+{
+    int x;
+    struct list *next;
+}l;
+l *ptr,*head,*new1,*ptr1,*a,*b,*loc;
+int ele,ele1;
+void create(l*);
+void display();
+void count(l*);
+void insert_beg(void);
+void insert_end(void);
+void insert_bet(l *);
+void insert_bef(l *);
+void sort(l *);
+void swap(l *,l *);
+void del(l *);
+void rev(l *);
+
 int main()
 {
-    printf("Enter the row & column :\n");
-    scanf("%d%d",&r,&c);
-
-    a=(int *)malloc(sizeof(int)*r*c);
-    b=(int *)malloc(sizeof(int)*r*c);
-    sum=(int *)malloc(sizeof(int)*r*c);
-    mul=(int *)malloc(sizeof(int)*r*c);
-    sub=(int *)malloc(sizeof(int)*r*c);
-    trs1=(int *)malloc(sizeof(int)*r*c);
-    trs2=(int *)malloc(sizeof(int)*r*c);
-
-    printf("\nEnter the first matrix :\n");
-    input(a);
-    printf("\nEnter the second matrix :\n");
-    input(b);
-    addition(a,b,sum);
-    printf("\nFirst matrix is :\n");
-    display(a);
-    printf("\nSecond matrix is :\n");
-    display(b);
-    printf("\nAddition of matrix is :\n");
-    display(sum);
-    subtraction(a,b,sub);
-    printf("\nSubtraction of matrix:\n");
-    display(sub);
-    multiply(a,b,mul);
-    printf("\nMultiplication of matrix is :\n");
-    display(mul);
-    transpose(a,trs1);
-    transpose(b,trs2);
-    printf("\nTranspose of first matrix is :\n");
-    display(trs1);
-    printf("\nTranspose of second matrix is :\n");
-    display(trs2);
-
+    int m;
+    head=(l*)malloc(sizeof(l));
+    create(head);
+    while(1)
+    {
+        printf("\n         menu list               \n");
+        printf("1. Count \n2. Display \n3. Insert_begning \n4. Insert_end\n5. Insert in between two numbers \n6. Insert before a number\n7. Sorting \n");
+        printf("8. Delete :\n9. Reverse\n");
+        scanf("%d",&m);
+        switch(m)
+        {
+            case 1:count(head);
+            break;
+            case 2:display();
+            printf("null");
+            break;
+            case 3:insert_beg();
+            break;
+            case 4:insert_end();
+            break;
+            case 5:insert_bet(head);
+            break;
+            case 6:insert_bef(head);
+            break;
+            case 7:sort(head);
+            break;
+            case 8:del(head);
+            break;
+            case 9:rev(head);
+            break;
+            default :
+                printf("wrong choice:");
+        }
+    }
     return 0;
 }
-void input(int *p)
+void create(l *ptr)
 {
-    for(i=0;i<r;i++)
+    char ch;
+    printf("Enter the value of node:- ");
+    scanf("%d",&ptr->x);
+    ptr->next=null;
+    printf("Do you want more node (y/n) :- ");
+    scanf(" %c",&ch);
+    if(ch=='y'||ch=='y')
     {
-        for(j=0;j<c;j++)
-            scanf("%d",(p+i*c+j));
+        ptr->next=(l*)malloc(sizeof(l));
+        ptr=ptr->next;
+        create(ptr);
     }
 }
-void display(int *p)
+void display()
 {
-    for(i=0;i<r;i++)
+    ptr=head;
+    printf("\nThe linked list is :- \t");
+    while(ptr!=null)
     {
-        for(j=0;j<c;j++)
-            printf("%d ",*(p+i*c+j));
-        printf("\n");
+        printf("%d->",ptr->x);
+        ptr=ptr->next;
     }
 }
-void addition(int *p,int *q,int *s)
+void count(l *ptr)
 {
-    for(i=0;i<r;i++)
+    int count=0;
+    while(ptr!=null)
     {
-        for(j=0;j<c;j++)
-            *(s+i*c+j)=*(p+i*c+j)+*(q+i*c+j);
+        count++;
+        ptr=ptr->next;
     }
+    printf("\nNumber of element in the list is :- %d ",count);
 }
-void multiply(int *p,int *q,int *s)
+void insert_beg()
 {
-    for(i=0;i<r;i++)
+    l *new1=(l*)malloc(sizeof(l));
+    printf("\nEnter the number to be inserted : \n");
+    scanf("%d",&new1->x);
+    new1->next=head;
+    head=new1;
+}
+void insert_end()
+{
+    l *new1=(l*)malloc(sizeof(l));
+    printf("\nEnter the number to be inserted at end :- ");
+    scanf("%d",&new1->x);
+    ptr=head;
+    while(ptr->next!=null)
+        ptr=ptr->next;
+    new1->next=ptr->next;
+    ptr->next=new1;
+}
+void insert_bet(l *ptr)
+{
+    printf("\nEnter the nodes between which to enter :\n");
+    scanf("%d%d",&ele,&ele1);
+    l *new1=(l*)malloc(sizeof(l));
+    printf("Enter the new value : ");
+    scanf("%d",&new1->x);
+    while(ptr->next!=null)
     {
-        for(j=0;j<c;j++)
+        if((ptr->x==ele)&&(ptr->next->x==ele1))
         {
-            *(s+i*c+j)=0;
-            for(int k=0;k<c;k++)
-                *(s+i*c+j)+=*(p+i*c+k)**(q+j*c+k);
+            new1->next=ptr->next;
+            ptr->next=new1;
+        }
+        ptr=ptr->next;
+    }
+}
+void insert_bef(l *ptr)
+{
+    l *new1=(l*)malloc(sizeof(l));
+    printf("\nEnter the value before which to insert :- ");
+    scanf("%d",&ele);
+    printf("\nEnter the new number :\n");
+    scanf("%d",&new1->x);
+    if(ptr->x==ele)
+        insert_beg();
+    else
+    {
+        l *ptr1=ptr->next;
+        while(ptr1!=null)
+        {
+            if(ptr1->x==ele)
+            {
+                new1->next=ptr->next;
+                ptr->next=new1;
+            }
+            ptr=ptr1;
+            ptr1=ptr1->next;
         }
     }
 }
-void subtraction(int *p,int *q,int *s)
+void sort(l *ptr)
 {
-    for(i=0;i<r;i++)
+    while(ptr->next!=null)
     {
-        for(j=0;j<c;j++)
-            *(s+i*c+j)=*(p+i*c+j)-*(q+i*c+j);
+        l *ptr1=ptr->next;
+        while(ptr1!=null)
+        {
+            if(ptr->x > ptr1->x)
+            {
+                swap(ptr,ptr1);
+            }
+            ptr1=ptr1->next;
+        }
+        ptr=ptr->next;
     }
 }
-void transpose(int *p,int *q)
+void swap(l *a,l *b)
 {
-    for(i=0;i<r;i++)
+    int temp;
+    temp=a->x;
+    a->x=b->x;
+    b->x=temp;
+    //display();
+}
+void del(l *ptr)
+{
+    printf("\nEnter the number to be deleted : \n");
+    scanf("%d",&ele);
+    if(ptr->x==ele)
     {
-        for(j=0;j<c;j++)
-            *(q+i*c+j)=*(p+j*r+i);
+        head=ptr->next;
+        loc=ptr;
+        free(loc);
+        ptr=ptr->next;
+
+        if(head!=null)
+            del(head);
+        else
+        {
+            printf("\nList Empty : ");
+            head=null;
+        }
     }
+    else
+    {
+        l *ptr1=ptr->next;
+        while(ptr1!=null)
+        {
+            if(ptr1->x==ele)
+            {
+                ptr->next=ptr1->next;
+                loc=ptr1;
+                free(loc);
+            }
+            ptr=ptr1;
+            ptr1=ptr->next;
+        }
+    }
+}
+void rev(l *ptr)
+{
+    l *prev=null;
+    l *current=head;
+    l *forw=null;
+    while(current!=null)
+    {
+        forw=current->next;
+        current->next=prev;
+        prev=current;
+        current=forw;
+    }
+    ptr=prev;
+    ptr=ptr->next;
+
 }
